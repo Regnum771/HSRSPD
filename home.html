@@ -1,17 +1,32 @@
 
 <head>
   <script src="https://d3js.org/d3.v6.min.js"></script>
+  <link rel="stylesheet" href="mystyle.css">
 </head>
 
 <body>
-    <div class = "slider-div">
-        <input type = "range" min = "90" max = "200" value = "100" 
-        class = "slider" id = "spd">
-    </div>
-
-    <div>
-        <a id = "demo"></a>
-    </div>
+    <span class = "character-config">
+        <div>        
+            <label for="spd">SPD</label>
+            <input type = "number" min = "90" max = "200" value = "100" 
+            class = "spd">
+        </div>
+        <div>        
+            <label for="spd1">SPD</label>
+            <input type = "number" min = "90" max = "200" value = "100" 
+            class = "spd">
+        </div>
+        <div>        
+            <label for="spd">SPD</label>
+            <input type = "number" min = "90" max = "200" value = "100" 
+            class = "spd">
+        </div>
+        <div>        
+            <label for="spd1">SPD</label>
+            <input type = "number" min = "90" max = "200" value = "100" 
+            class = "spd">
+        </div>
+    </span>
     <div>
         <svg id = "timeline" width = 1000 height = 200>
             <g>
@@ -52,10 +67,8 @@
         data.push(character_turn_data)
     })
     
-    var slider = document.getElementById("spd");
-    var output = document.getElementById("demo");
-    output.innerHTML = slider.value;
-
+    let character_spd = document.getElementsByClassName("spd");
+    console.log(character_spd)
     var af = document.getElementById("af-amount");
     var selected;
     let svg = d3.select("#timeline");
@@ -124,19 +137,21 @@
     af.oninput = function(){
         selected.__data__.af = af.value;
         update_timeline();
-    }
+    }   
 
-    slider.oninput = function() {
-        output.innerHTML = slider.value;
-        character_data["1"]["spd"] = slider.value;
-
-        update_timeline();
-    }
+    character_spd = document.querySelectorAll('.spd')
+    document.querySelectorAll('.spd').forEach((item, index) => {
+        item.addEventListener('input', event => {
+            console.log(character_data[index].spd)
+            character_data[index].spd = item.value;
+            update_timeline();
+        })
+    })
 
     function update_timeline(){
         for(var id = 0; id < data.length; id++){
             for(var turn = 0; turn < data[id].length; turn++){
-                data[id][turn].spd = slider.value;
+                data[id][turn].spd = character_data[id].spd;
                 if(turn == 0){
                     data[id][turn].av = 
                     10000/data[id][turn].spd * (1 - data[id][turn].af/100);
