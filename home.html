@@ -41,15 +41,7 @@
     </span>
     <div>
         <svg id = "timeline" width = 1000 height = 200>
-            <g>
-                <line x1="150" y1="0" x2="150" y2="200" stroke="black"/>
-                <line x1="250" y1="0" x2="250" y2="200" stroke="black"/>
-                <line x1="350" y1="0" x2="350" y2="200" stroke="black"/>
-                <line x1="450" y1="0" x2="450" y2="200" stroke="black"/>
-                <line x1="550" y1="0" x2="550" y2="200" stroke="black"/>
-                <line x1="650" y1="0" x2="650" y2="200" stroke="black"/>
-                <line x1="750" y1="0" x2="750" y2="200" stroke="black"/>
-            </g>
+
         </svg>
     </div>
     <div>
@@ -59,6 +51,7 @@
 </body>
 
 <script>
+    let colour = ["#6b40a0", "#a04045", "#40a09c", "#a09c40"]
     let character_data = []
     for (var i = 0; i < 4; i++){
         character_data.push({"id": i, "spd":100})
@@ -79,11 +72,35 @@
         data.push(character_turn_data)
     })
     
+    let cycle_marker = [150, 250, 350, 450, 550, 650, 750]
+    let sub_cycle_marker = [50, 100, 200, 300, 400, 500, 600, 700]
+
     var af = document.getElementById("af-amount");
     var selected;
     let svg = d3.select("#timeline");
 
     var row_height = 25;
+    svg.selectAll(".cycle-marker")
+        .data(cycle_marker)
+        .join("line")
+        .attr("class", "cycle-marker")
+        .attr("x1", d => d)
+        .attr("x2", d => d)
+        .attr("y1", 0)
+        .attr("y2", 200)
+        .attr("stroke", "black");
+
+    svg.selectAll(".sub-cycle-marker")
+        .data(sub_cycle_marker)
+        .join("line")
+        .attr("class", "sub-cycle-marker")
+        .attr("x1", d => d)
+        .attr("x2", d => d)
+        .attr("y1", 0)
+        .attr("y2", 200)
+        .attr("stroke", "grey");
+
+
     svg.selectAll(".bubble")  
         .data(data)
         .join("g")
@@ -96,8 +113,8 @@
         .attr("cx", d => d.av)
         .attr("cy", d => row_height * (d.id + 1))
         .attr("r", d => 10)
-        .attr("stroke", "darkblue")
-        .attr("fill", d => "lightblue");
+        .attr("stroke", d=> colour[d.id])
+        .attr("fill", d => colour[d.id]);
 
     svg.selectAll(".bubble-tip")  
         .data(data)
@@ -127,11 +144,9 @@
             .style("display", "block")
             .attr("x", d => d.av + 25)
             .attr("y", d => (d.id + 1) * row_height)
-            .attr("stroke", d=> "black")
-            .attr("fill", d => "blue");
+            .attr("stroke", d=> colour[d.id])
+            .attr("fill", d => "white");
 
-
-    
     svg.selectAll(".bubble")
         .on("mouseover", function(event, d){
             d3.select("#bubble-tip-"+ d.id + "-" + d.turn)
@@ -142,7 +157,6 @@
             .style("display","none");
             })
         .on("click", function(event, d){
-            d3.select(this).attr("stroke", "black");
             af.value = d.af;
             selected = this;
         });
@@ -184,12 +198,12 @@
         svg.selectAll(".bubble-tip").select("rect")
         .transition()
         .duration(200)
-        .attr("x", d=>d.av - 25);
+        .attr("x", d=>d.av + 25);
 
         svg.selectAll(".bubble-tip").select("text")
         .transition()
         .duration(200)
-        .attr("x", d=>d.av - 25)
+        .attr("x", d=>d.av + 25)
         .text(d => "av: " + parseInt(d.av));
     }
 </script>
