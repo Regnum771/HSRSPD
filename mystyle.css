@@ -1,3 +1,11 @@
+.character-config{
+    width: 60%;
+}
 .character-config > div{
     display: inline-block;
+    width: 15%;
+}
+
+.character-config > div > *{
+    display: block;
 }

@@ -10,21 +10,33 @@
             <label for="spd">SPD</label>
             <input type = "number" min = "90" max = "200" value = "100" 
             class = "spd">
-        </div>
-        <div>        
-            <label for="spd1">SPD</label>
+            <label for="spd">ERR</label>
             <input type = "number" min = "90" max = "200" value = "100" 
-            class = "spd">
+            class = "er">
         </div>
         <div>        
             <label for="spd">SPD</label>
             <input type = "number" min = "90" max = "200" value = "100" 
             class = "spd">
+            <label for="spd">ERR</label>
+            <input type = "number" min = "90" max = "200" value = "100" 
+            class = "er">
         </div>
         <div>        
-            <label for="spd1">SPD</label>
+            <label for="spd">SPD</label>
             <input type = "number" min = "90" max = "200" value = "100" 
             class = "spd">
+            <label for="spd">ERR</label>
+            <input type = "number" min = "90" max = "200" value = "100" 
+            class = "er">
+        </div>
+        <div>        
+            <label for="spd">SPD</label>
+            <input type = "number" min = "90" max = "200" value = "100" 
+            class = "spd">
+            <label for="spd">ERR</label>
+            <input type = "number" min = "90" max = "200" value = "100" 
+            class = "er">
         </div>
     </span>
     <div>
@@ -67,11 +79,25 @@
         data.push(character_turn_data)
     })
     
-    let character_spd = document.getElementsByClassName("spd");
-    console.log(character_spd)
     var af = document.getElementById("af-amount");
     var selected;
     let svg = d3.select("#timeline");
+
+    var row_height = 25;
+    svg.selectAll(".bubble")  
+        .data(data)
+        .join("g")
+        .selectAll("circle")
+        .data(function(d){
+            return d;
+        })
+        .join("circle")
+        .attr("class", "bubble")
+        .attr("cx", d => d.av)
+        .attr("cy", d => row_height * (d.id + 1))
+        .attr("r", d => 10)
+        .attr("stroke", "darkblue")
+        .attr("fill", d => "lightblue");
 
     svg.selectAll(".bubble-tip")  
         .data(data)
@@ -82,11 +108,11 @@
         })
         .join("g")
         .attr("class", "bubble-tip")
-        .attr("id", d=>"bubble-tip-"+d.turn)
+        .attr("id", d=>"bubble-tip-"+ d.id + "-" + d.turn)
         .style("display", "none")
         .append("rect")
-            .attr("x", d => d.av - 25)
-            .attr("y", d => 0)
+            .attr("x", d => d.av + 25)
+            .attr("y", d => (d.id + 0.5) * row_height)
             .attr("fill",d => "lightblue")
             .attr("fill-opacity", d=> 0.9)
             .attr("width", d=> 50)
@@ -99,33 +125,20 @@
             .style("font-size", 14)
             .style("text-align", "left")
             .style("display", "block")
-            .attr("x", d => d.av - 25)
-            .attr("y", d => 15)
+            .attr("x", d => d.av + 25)
+            .attr("y", d => (d.id + 1) * row_height)
             .attr("stroke", d=> "black")
             .attr("fill", d => "blue");
 
-    svg.selectAll(".bubble")  
-        .data(data)
-        .join("g")
-        .selectAll("circle")
-        .data(function(d){
-            return d;
-        })
-        .join("circle")
-        .attr("class", "bubble")
-        .attr("cx", d => d.av)
-        .attr("cy", d => 30 * d.id)
-        .attr("r", d => 10)
-        .attr("stroke", "darkblue")
-        .attr("fill", d => "lightblue");
+
     
     svg.selectAll(".bubble")
         .on("mouseover", function(event, d){
-            d3.select("#bubble-tip-"+d.turn)
+            d3.select("#bubble-tip-"+ d.id + "-" + d.turn)
             .style("display","block");
             })
         .on("mouseout", function(event, d){
-            d3.select("#bubble-tip-"+d.turn)
+            d3.select("#bubble-tip-"+ d.id + "-" + d.turn)
             .style("display","none");
             })
         .on("click", function(event, d){
@@ -142,7 +155,6 @@
     character_spd = document.querySelectorAll('.spd')
     document.querySelectorAll('.spd').forEach((item, index) => {
         item.addEventListener('input', event => {
-            console.log(character_data[index].spd)
             character_data[index].spd = item.value;
             update_timeline();
         })
