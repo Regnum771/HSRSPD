@@ -1,0 +1,177 @@
+
+<head>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+
+<body>
+    <div class = "slider-div">
+        <input type = "range" min = "90" max = "200" value = "100" 
+        class = "slider" id = "spd">
+    </div>
+
+    <div>
+        <a id = "demo"></a>
+    </div>
+    <div>
+        <svg id = "timeline" width = 1000 height = 200>
+            <g>
+                <line x1="150" y1="0" x2="150" y2="200" stroke="black"/>
+                <line x1="250" y1="0" x2="250" y2="200" stroke="black"/>
+                <line x1="350" y1="0" x2="350" y2="200" stroke="black"/>
+                <line x1="450" y1="0" x2="450" y2="200" stroke="black"/>
+                <line x1="550" y1="0" x2="550" y2="200" stroke="black"/>
+                <line x1="650" y1="0" x2="650" y2="200" stroke="black"/>
+                <line x1="750" y1="0" x2="750" y2="200" stroke="black"/>
+            </g>
+        </svg>
+    </div>
+    <div>
+        <p>Advanced Forward By:</p>
+        <input type = "number" id = "af-amount" value = 0>
+    </div>
+</body>
+
+<script>
+    let character_data = {
+        1 : {"spd":134}
+    }
+    let data = [
+        [{"id":1, "turn":0, "spd":100, "af":0, "av": 100},
+        {"id":1, "turn":1, "spd":100, "af":0, "av": 200},
+        {"id":1, "turn":2, "spd":100, "af":0, "av": 300},
+        {"id":1, "turn":3, "spd":100, "af":0, "av": 400},
+        {"id":1, "turn":4, "spd":100, "af":0, "av": 500},
+        {"id":1, "turn":5, "spd":100, "af":0, "av": 600},],
+        [{"id":2, "turn":0, "spd":100, "af":0, "av": 100},
+        {"id":2, "turn":1, "spd":100, "af":0, "av": 200},
+        {"id":2, "turn":2, "spd":100, "af":0, "av": 300},
+        {"id":2, "turn":3, "spd":100, "af":0, "av": 400},
+        {"id":2, "turn":4, "spd":100, "af":0, "av": 500},
+        {"id":2, "turn":5, "spd":100, "af":0, "av": 600},],
+        [{"id":3, "turn":0, "spd":100, "af":0, "av": 100},
+        {"id":3, "turn":1, "spd":100, "af":0, "av": 200},
+        {"id":3, "turn":2, "spd":100, "af":0, "av": 300},
+        {"id":3, "turn":3, "spd":100, "af":0, "av": 400},
+        {"id":3, "turn":4, "spd":100, "af":0, "av": 500},
+        {"id":3, "turn":5, "spd":100, "af":0, "av": 600},],
+        [{"id":4, "turn":0, "spd":100, "af":0, "av": 100},
+        {"id":4, "turn":1, "spd":100, "af":0, "av": 200},
+        {"id":4, "turn":2, "spd":100, "af":0, "av": 300},
+        {"id":4, "turn":3, "spd":100, "af":0, "av": 400},
+        {"id":4, "turn":4, "spd":100, "af":0, "av": 500},
+        {"id":4, "turn":5, "spd":100, "af":0, "av": 600},],
+    ]
+    var slider = document.getElementById("spd");
+    var output = document.getElementById("demo");
+    output.innerHTML = slider.value;
+
+    var af = document.getElementById("af-amount");
+    var selected;
+    let svg = d3.select("#timeline");
+
+    svg.selectAll(".bubble-tip")  
+        .data(data)
+        .join("g")
+        .selectAll("rect")
+        .data(function(d){
+            return d;
+        })
+        .join("g")
+        .attr("class", "bubble-tip")
+        .attr("id", d=>"bubble-tip-"+d.turn)
+        .style("display", "none")
+        .append("rect")
+            .attr("x", d => d.av - 25)
+            .attr("y", d => 0)
+            .attr("fill",d => "lightblue")
+            .attr("fill-opacity", d=> 0.9)
+            .attr("width", d=> 50)
+            .attr("height", d=> 25);
+
+    svg.selectAll(".bubble-tip")  
+        .append("text")
+            .text(d => "av: " + d.av)
+            .style("font-family", "sans-serif")
+            .style("font-size", 14)
+            .style("text-align", "left")
+            .style("display", "block")
+            .attr("x", d => d.av - 25)
+            .attr("y", d => 15)
+            .attr("stroke", d=> "black")
+            .attr("fill", d => "blue");
+
+    svg.selectAll(".bubble")  
+        .data(data)
+        .join("g")
+        .selectAll("circle")
+        .data(function(d){
+            return d;
+        })
+        .join("circle")
+        .attr("class", "bubble")
+        .attr("cx", d => d.av)
+        .attr("cy", d => 30 * d.id)
+        .attr("r", d => 10)
+        .attr("stroke", "darkblue")
+        .attr("fill", d => "lightblue");
+    
+    svg.selectAll(".bubble")
+        .on("mouseover", function(event, d){
+            d3.select("#bubble-tip-"+d.turn)
+            .style("display","block");
+            })
+        .on("mouseout", function(event, d){
+            d3.select("#bubble-tip-"+d.turn)
+            .style("display","none");
+            })
+        .on("click", function(event, d){
+            d3.select(this).attr("stroke", "black");
+            af.value = d.af;
+            selected = this;
+        });
+    
+    af.oninput = function(){
+        selected.__data__.af = af.value;
+        update_timeline();
+    }
+
+    slider.oninput = function() {
+        output.innerHTML = slider.value;
+        character_data["1"]["spd"] = slider.value;
+
+        update_timeline();
+    }
+
+    function update_timeline(){
+        for(var id = 0; id < data.length; id++){
+            for(var turn = 0; turn < data[id].length; turn++){
+                data[id][turn].spd = slider.value;
+                if(turn == 0){
+                    data[id][turn].av = 
+                    10000/data[id][turn].spd * (1 - data[id][turn].af/100);
+                } else{
+                    data[id][turn].av = 
+                        data[id][turn - 1].av 
+                        + 10000/data[id][turn].spd
+                        * (1 - data[id][turn].af/100);
+                }
+            }
+        } 
+
+        svg.selectAll(".bubble")
+        .transition()
+        .duration(200)
+        .attr("cx", d=>{return d.av});
+        
+        svg.selectAll(".bubble-tip").select("rect")
+        .transition()
+        .duration(200)
+        .attr("x", d=>d.av - 25);
+
+        svg.selectAll(".bubble-tip").select("text")
+        .transition()
+        .duration(200)
+        .attr("x", d=>d.av - 25)
+        .text(d => "av: " + parseInt(d.av));
+    }
+</script>
