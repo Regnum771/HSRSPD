@@ -100,6 +100,20 @@
         .attr("y2", 200)
         .attr("stroke", "grey");
 
+    svg.selectAll(".turn-marker")  
+        .data(data)
+        .join("g")
+        .selectAll("line")
+        .data(function(d){
+            return d;
+        })
+        .join("line")
+        .attr("class", "turn-marker")
+        .attr("x1", d => d.av)
+        .attr("x2", d => d.av)
+        .attr("y1", 0)
+        .attr("y2", 200)
+        .attr("stroke", d => colour[d.id]);
 
     svg.selectAll(".bubble")  
         .data(data)
@@ -113,9 +127,11 @@
         .attr("cx", d => d.av)
         .attr("cy", d => row_height * (d.id + 1))
         .attr("r", d => 10)
-        .attr("stroke", d=> colour[d.id])
-        .attr("fill", d => colour[d.id]);
+        .attr("fill", d=> colour[d.id]);
+        
 
+
+        
     svg.selectAll(".bubble-tip")  
         .data(data)
         .join("g")
@@ -151,12 +167,13 @@
         .on("mouseover", function(event, d){
             d3.select("#bubble-tip-"+ d.id + "-" + d.turn)
             .style("display","block");
-            })
+        })
         .on("mouseout", function(event, d){
             d3.select("#bubble-tip-"+ d.id + "-" + d.turn)
             .style("display","none");
             })
         .on("click", function(event, d){
+            d3.select(this).attr("stroke-dasharray", 5).attr("stroke", "black");
             af.value = d.af;
             selected = this;
         });
@@ -189,6 +206,12 @@
                 }
             }
         } 
+
+        svg.selectAll(".turn-marker")
+        .transition()
+        .duration(200)
+        .attr("x1", d=>{return d.av})
+        .attr("x2", d=>{return d.av});
 
         svg.selectAll(".bubble")
         .transition()
