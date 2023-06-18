@@ -1,3 +1,6 @@
+var row_height = 25;
+var canvas_height = 150;
+
 function init_timeline_data(cdata){};
 
 let svg = d3.select("#timeline");
@@ -9,21 +12,14 @@ console.log(character_data);
 let data = init_timeline_data(character_data);
 
 var af = document.getElementById("af-amount");
-var spd = document.getElementById("spd-amount");
 var selected;
 
-var row_height = 25;
 
-draw()
+
+init_turn_indicator();
 
 af.oninput = function(){
     selected.__data__.af = af.value;
-    update_timeline();
-}   
-
-spd.oninput = function(){
-    selected.__data__.spd = spd.value;
-    console.log(selected.__data__.spd);
     update_timeline();
 }   
 
@@ -63,14 +59,14 @@ function draw_timeline_elements(){
         .attr("x1", d => d)
         .attr("x2", d => d)
         .attr("y1", 0)
-        .attr("y2", 200)
+        .attr("y2", canvas_height)
         .attr("stroke", "black");
 
     svg.selectAll(".a")
         .append("text")
         .attr("class", "cycle-marker")
         .attr("x", d => d)
-        .attr("y", 190)
+        .attr("y", canvas_height)
         .text(d => d)
         .attr("stroke", "black");
 
@@ -81,7 +77,7 @@ function draw_timeline_elements(){
         .attr("x1", d => d)
         .attr("x2", d => d)
         .attr("y1", 0)
-        .attr("y2", 200)
+        .attr("y2", canvas_height)
         .attr("stroke", "grey");
 }
 
@@ -111,29 +107,17 @@ function init_timeline_data(cdata){
     return tldata;
 }
 
-function draw(){
-    svg.selectAll(".turn-marker")  
+function init_turn_indicator(){
+    svg.selectAll(".indicator")  
     .data(data)
     .join("g")
-    .selectAll("line")
+    .selectAll("g")
     .data(function(d){
         return d;
     })
-    .join("line")
-    .attr("class", "turn-marker")
-    .attr("x1", d => d.av)
-    .attr("x2", d => d.av)
-    .attr("y1", 0)
-    .attr("y2", 200)
-    .attr("stroke", d => colour[d.id]);
-
-    svg.selectAll(".bubble")  
-        .data(data)
-        .join("g")
-        .selectAll("circle")
-        .data(function(d){
-            return d;
-        })
+    .join("g")
+        .attr("class", "indicator")
+        .append("circle")
         .join("circle")
         .attr("class", "bubble")
         .attr("cx", d => d.av)
@@ -141,44 +125,53 @@ function draw(){
         .attr("r", d => 10)
         .attr("fill", d=> colour[d.id]);
 
-    svg.selectAll(".bubble-tip")  
-        .data(data)
-        .join("g")
-        .selectAll("rect")
-        .data(function(d){
-            return d;
-        })
-        .join("g")
-        .attr("class", "bubble-tip")
-        .attr("id", d=>"bubble-tip-"+ d.id + "-" + d.turn)
-        .style("display", "none")
+    svg.selectAll(".indicator")  
+        .append("line")
+        .attr("class", "turn-marker")
+        .attr("x1", d => d.av)
+        .attr("x2", d => d.av)
+        .attr("y1", 0)
+        .attr("y2", canvas_height)
+        .attr("stroke", d => colour[d.id]);
+
+    
+    svg.selectAll(".indicator")  
         .append("rect")
+            .attr("class", "bubble-tip")
+            .attr("id", d=>"bubble-tip-"+ d.id + "-" + d.turn)
+            .style("display", "none")
             .attr("x", d => d.av + 25)
             .attr("y", d => (d.id + 0.5) * row_height)
             .attr("fill",d => "lightblue")
             .attr("fill-opacity", d=> 0.9)
             .attr("width", d=> 50)
             .attr("height", d=> 25);
-
-    svg.selectAll(".bubble-tip")  
+    
+    svg.selectAll(".indicator")  
         .append("text")
             .text(d => "av: " + d.av)
+            .attr("class", "bubble-tip")
+            .attr("id", d=>"bubble-text-"+ d.id + "-" + d.turn)
             .style("font-family", "sans-serif")
+            .style("display", "none")
             .style("font-size", 14)
             .style("text-align", "left")
-            .style("display", "block")
             .attr("x", d => d.av + 25)
             .attr("y", d => (d.id + 1) * row_height)
             .attr("stroke", d=> colour[d.id])
             .attr("fill", d => "white");
-
+    
     svg.selectAll(".bubble")
         .on("mouseover", function(event, d){
             d3.select("#bubble-tip-"+ d.id + "-" + d.turn)
             .style("display","block");
+            d3.select("#bubble-text-"+ d.id + "-" + d.turn)
+            .style("display","block");
         })
         .on("mouseout", function(event, d){
             d3.select("#bubble-tip-"+ d.id + "-" + d.turn)
+            .style("display","none");
+            d3.select("#bubble-text-"+ d.id + "-" + d.turn)
             .style("display","none");
             })
         .on("click", function(event, d){
@@ -187,7 +180,6 @@ function draw(){
                 .attr("cy", row_height * (d.id + 1))
                 .attr("display", "block");
             af.value = d.af;
-            spd.value = d.spd;
             selected = this;
         });
 
@@ -204,9 +196,9 @@ function draw(){
     svg.append("rect")
         .attr("x", 750)
         .attr("y", 0)
-        .attr("fill","white")
+        .attr("fill","#1F1B24")
         .attr("width", 600)
-        .attr("height", 200);
+        .attr("height", canvas_height);
 }
 
 function update_timeline(){
@@ -243,15 +235,9 @@ function update_timeline(){
         .attr("cx", selected.__data__.av);
     }
 
-    svg.selectAll(".bubble-tip").select("rect")
+    svg.selectAll(".bubble-tip")
     .transition()
     .duration(200)
     .attr("x", d=>d.av + 25);
-
-    svg.selectAll(".bubble-tip").select("text")
-    .transition()
-    .duration(200)
-    .attr("x", d=>d.av + 25)
-    .text(d => "av: " + parseInt(d.av));
 }
 

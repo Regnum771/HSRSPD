@@ -1,11 +1,33 @@
-.character-config{
-    width: 60%;
+body{
+    background-color: #1F1B24;
 }
+
+svg{
+    background-color: beige;
+}
+
+label{
+    color: white;
+}
+
+.character-config{
+    vertical-align: top;
+}
+
+#offset{
+    height: 12.5px;
+}
+
 .character-config > div{
-    display: inline-block;
-    width: 15%;
+    vertical-align: top;
+    height: 25px;
 }
 
 .character-config > div > *{
-    display: block;
+    vertical-align: top;
+    display: inline-block;
+}
+
+span{
+    display: inline-block;
 }
