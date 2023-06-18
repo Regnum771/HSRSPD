@@ -80,14 +80,27 @@
     let svg = d3.select("#timeline");
 
     var row_height = 25;
-    svg.selectAll(".cycle-marker")
+
+    svg.selectAll(".a")
         .data(cycle_marker)
-        .join("line")
+        .join("g")
+        .attr("class", "a");
+
+    svg.selectAll(".a")
+        .append("line")
         .attr("class", "cycle-marker")
         .attr("x1", d => d)
         .attr("x2", d => d)
         .attr("y1", 0)
         .attr("y2", 200)
+        .attr("stroke", "black");
+    
+    svg.selectAll(".a")
+        .append("text")
+        .attr("class", "cycle-marker")
+        .attr("x", d => d)
+        .attr("y", 190)
+        .text(d => d)
         .attr("stroke", "black");
 
     svg.selectAll(".sub-cycle-marker")
@@ -128,10 +141,7 @@
         .attr("cy", d => row_height * (d.id + 1))
         .attr("r", d => 10)
         .attr("fill", d=> colour[d.id]);
-        
 
-
-        
     svg.selectAll(".bubble-tip")  
         .data(data)
         .join("g")
@@ -173,11 +183,31 @@
             .style("display","none");
             })
         .on("click", function(event, d){
-            d3.select(this).attr("stroke-dasharray", 5).attr("stroke", "black");
+            d3.select(".highlight")
+                .attr("cx", d.av)
+                .attr("cy", row_height * (d.id + 1))
+                .attr("display", "block");
             af.value = d.af;
             selected = this;
         });
+
+    svg.append("circle")
+        .attr("class", "highlight")
+        .attr("cx", 0)
+        .attr("cy", 0)
+        .attr("r", 12)
+        .attr("fill", "none")
+        .attr("stroke-dasharray", 5)
+        .attr("stroke", "black")
+        .attr("display", "none");
     
+    svg.append("rect")
+        .attr("x", 750)
+        .attr("y", 0)
+        .attr("fill","white")
+        .attr("width", 600)
+        .attr("height", 200);
+
     af.oninput = function(){
         selected.__data__.af = af.value;
         update_timeline();
@@ -206,7 +236,7 @@
                 }
             }
         } 
-
+        
         svg.selectAll(".turn-marker")
         .transition()
         .duration(200)
@@ -218,6 +248,11 @@
         .duration(200)
         .attr("cx", d=>{return d.av});
         
+        svg.selectAll(".highlight")
+        .transition()
+        .duration(200)
+        .attr("cx", selected.__data__.av);
+
         svg.selectAll(".bubble-tip").select("rect")
         .transition()
         .duration(200)
