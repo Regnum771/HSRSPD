@@ -29,12 +29,19 @@ spd.oninput = function(){
 
 character_spd = document.querySelectorAll('.spd')
 document.querySelectorAll('.spd').forEach((item, index) => {
-    item.addEventListener('input', event => {
+    item.addEventListener('change', event => {
         if(item.value > 90 & item.value < 200){
             character_data[index].spd = item.value;
             update_timeline();
         } else{
             item.value = 90;
+            character_data[index].spd = item.value;
+            update_timeline();
+        }
+    })
+
+    item.addEventListener('input', event => {
+        if(item.value > 90 & item.value < 200){
             character_data[index].spd = item.value;
             update_timeline();
         }
