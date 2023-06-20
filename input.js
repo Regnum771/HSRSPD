@@ -22,6 +22,9 @@ var selected;
 init_turn_indicator();
 
 af.oninput = function(){
+    if(af.value >= 100){
+        af.value = 99;
+    }
     selected.__data__.af = af.value;
     update_timeline();
 }   
