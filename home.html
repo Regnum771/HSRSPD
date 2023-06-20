@@ -5,39 +5,45 @@
 </head>
 
 <body>
-    <span class = "character-config">
-        <div id = "offset"></div>
-        <div>        
-            <label for="spd">SPD</label>
-            <input type = "number" min = "90" max = "200" value = "100" 
-            class = "spd">
+    <div id = "header">HSR SPD CALCULATOR</div>
+    <div id = "body" class = "border">
+        <div class = "character-config">
+            <div id = "offset"></div>
+            <div>        
+                <label for="spd">Character 1</label>
+                <input type = "number" min = "90" max = "200" value = "100" 
+                class = "spd">
+            </div>
+            <div>        
+                <label for="spd">Character 2</label>
+                <input type = "number" min = "90" max = "200" value = "100" 
+                class = "spd">
+            </div>
+            <div>        
+                <label for="spd">Character 3</label>
+                <input type = "number" min = "90" max = "200" value = "100" 
+                class = "spd">
+            </div>
+            <div>        
+                <label for="spd">Character 4</label>
+                <input type = "number" min = "90" max = "200" value = "100" 
+                class = "spd">
+            </div> 
         </div>
-        <div>        
-            <label for="spd">SPD</label>
-            <input type = "number" min = "90" max = "200" value = "100" 
-            class = "spd">
+        <div id = "timeline-container">
+            <svg id = "timeline"></svg>
         </div>
-        <div>        
-            <label for="spd">SPD</label>
-            <input type = "number" min = "90" max = "200" value = "100" 
-            class = "spd">
-        </div>
-        <div>        
-            <label for="spd">SPD</label>
-            <input type = "number" min = "90" max = "200" value = "100" 
-            class = "spd">
-        </div>
-         
-    </span>
-    <span>
-        <svg id = "timeline" width = 1000 height = 150>
-
-        </svg>
-    </span>
-    <div>
-        <label for = "af-amount">Advanced Forward By:</label>
-        <input type = "number" id = "af-amount" value = 0>
     </div>
+        <div class = "flow border left" id = "turn-config">
+            <p> Turn Configuration</p>
+            <label for = "af-amount">Advanced Forward By:</label>
+            <input type = "number" id = "af-amount" value = 0>
+        </div>
+        <div class = "flow border right" id = "acknowledgement">
+            <p>Acknowledgement</p>
+            <p>Programming: Victor Charlie</p>
+            <p>Design: Aeo</p>
+        </div>
 </body>
 
 <script type = "text/javascript" src ="input.js"></script>

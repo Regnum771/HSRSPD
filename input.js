@@ -1,20 +1,23 @@
 var row_height = 25;
-var canvas_height = 150;
+var canvas_height = 175;
+var canvas_width = 700;
+var line_height = 150;
+var top_offset = 25;
+var left_offset = 25;
 
 function init_timeline_data(cdata){};
 
 let svg = d3.select("#timeline");
+svg.attr("width", canvas_width).attr("height", canvas_height);
 
 draw_timeline_elements();
-let colour = ["#6b40a0", "#a04045", "#40a09c", "#a09c40"]
+let colour = ["#6768e1", "#f26379", "#34ad83", "#c15fea"]
 let character_data = init_character_data(4);
 console.log(character_data);
 let data = init_timeline_data(character_data);
 
 var af = document.getElementById("af-amount");
 var selected;
-
-
 
 init_turn_indicator();
 
@@ -45,7 +48,7 @@ document.querySelectorAll('.spd').forEach((item, index) => {
 })
 
 function draw_timeline_elements(){
-    let cycle_marker = [150, 250, 350, 450, 550, 650, 750]
+    let cycle_marker = [0, 150, 250, 350, 450, 550, 650, 750]
     let sub_cycle_marker = [50, 100, 200, 300, 400, 500, 600, 700]
 
     svg.selectAll(".a")
@@ -56,17 +59,17 @@ function draw_timeline_elements(){
     svg.selectAll(".a")
         .append("line")
         .attr("class", "cycle-marker")
-        .attr("x1", d => d)
-        .attr("x2", d => d)
-        .attr("y1", 0)
-        .attr("y2", canvas_height)
+        .attr("x1", d => d + left_offset)
+        .attr("x2", d => d + left_offset)
+        .attr("y1", top_offset)
+        .attr("y2", line_height)
         .attr("stroke", "black");
 
     svg.selectAll(".a")
         .append("text")
         .attr("class", "cycle-marker")
-        .attr("x", d => d)
-        .attr("y", canvas_height)
+        .attr("x", d => d - 12.5 + left_offset)
+        .attr("y", line_height + top_offset)
         .text(d => d)
         .attr("stroke", "black");
 
@@ -74,10 +77,10 @@ function draw_timeline_elements(){
         .data(sub_cycle_marker)
         .join("line")
         .attr("class", "sub-cycle-marker")
-        .attr("x1", d => d)
-        .attr("x2", d => d)
-        .attr("y1", 0)
-        .attr("y2", canvas_height)
+        .attr("x1", d => d + left_offset)
+        .attr("x2", d => d + left_offset)
+        .attr("y1", top_offset)
+        .attr("y2", line_height)
         .attr("stroke", "grey");
 }
 
@@ -120,18 +123,18 @@ function init_turn_indicator(){
         .append("circle")
         .join("circle")
         .attr("class", "bubble")
-        .attr("cx", d => d.av)
-        .attr("cy", d => row_height * (d.id + 1))
+        .attr("cx", d => d.av + left_offset)
+        .attr("cy", d => row_height * (d.id + 1) + top_offset)
         .attr("r", d => 10)
         .attr("fill", d=> colour[d.id]);
 
     svg.selectAll(".indicator")  
         .append("line")
         .attr("class", "turn-marker")
-        .attr("x1", d => d.av)
-        .attr("x2", d => d.av)
-        .attr("y1", 0)
-        .attr("y2", canvas_height)
+        .attr("x1", d => d.av + left_offset)
+        .attr("x2", d => d.av + left_offset)
+        .attr("y1", 25)
+        .attr("y2", line_height)
         .attr("stroke", d => colour[d.id]);
 
     
@@ -140,9 +143,9 @@ function init_turn_indicator(){
             .attr("class", "bubble-tip")
             .attr("id", d=>"bubble-tip-"+ d.id + "-" + d.turn)
             .style("display", "none")
-            .attr("x", d => d.av + 25)
-            .attr("y", d => (d.id + 0.5) * row_height)
-            .attr("fill",d => "lightblue")
+            .attr("x", d => d.av + +25 + left_offset)
+            .attr("y", d => (d.id + 0.5) * row_height + top_offset)
+            .attr("fill",d => "white")
             .attr("fill-opacity", d=> 0.9)
             .attr("width", d=> 50)
             .attr("height", d=> 25);
@@ -156,8 +159,8 @@ function init_turn_indicator(){
             .style("display", "none")
             .style("font-size", 14)
             .style("text-align", "left")
-            .attr("x", d => d.av + 25)
-            .attr("y", d => (d.id + 1) * row_height)
+            .attr("x", d => d.av + 25 + left_offset)
+            .attr("y", d => (d.id + 1) * row_height + top_offset)
             .attr("stroke", d=> colour[d.id])
             .attr("fill", d => "white");
     
@@ -176,8 +179,8 @@ function init_turn_indicator(){
             })
         .on("click", function(event, d){
             d3.select(".highlight")
-                .attr("cx", d.av)
-                .attr("cy", row_height * (d.id + 1))
+                .attr("cx", d.av + left_offset)
+                .attr("cy", row_height * (d.id + 1) + top_offset)
                 .attr("display", "block");
             af.value = d.af;
             selected = this;
@@ -190,15 +193,8 @@ function init_turn_indicator(){
         .attr("r", 12)
         .attr("fill", "none")
         .attr("stroke-dasharray", 5)
-        .attr("stroke", "black")
+        .attr("stroke", "white")
         .attr("display", "none");
-
-    svg.append("rect")
-        .attr("x", 750)
-        .attr("y", 0)
-        .attr("fill","#1F1B24")
-        .attr("width", 600)
-        .attr("height", canvas_height);
 }
 
 function update_timeline(){
@@ -220,24 +216,29 @@ function update_timeline(){
     svg.selectAll(".turn-marker")
     .transition()
     .duration(200)
-    .attr("x1", d=>{return d.av})
-    .attr("x2", d=>{return d.av});
+    .attr("x1", d=>{return d.av + left_offset})
+    .attr("x2", d=>{return d.av + left_offset});
 
     svg.selectAll(".bubble")
     .transition()
     .duration(200)
-    .attr("cx", d=>{return d.av});
+    .attr("cx", d=>{return d.av + left_offset});
     
     if(selected){
         svg.selectAll(".highlight")
         .transition()
         .duration(200)
-        .attr("cx", selected.__data__.av);
+        .attr("cx", selected.__data__.av + left_offset);
     }
 
     svg.selectAll(".bubble-tip")
     .transition()
     .duration(200)
-    .attr("x", d=>d.av + 25);
+    .attr("x", d=>d.av + 25 + left_offset);
+
+    svg.selectAll(".bubble-tip")
+    .transition()
+    .duration(200)
+    .text(d => "av: " + d.av);
 }
 
