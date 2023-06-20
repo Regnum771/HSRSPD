@@ -1,13 +1,29 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
 body{
-    background-color: #1F1B24;
+    font-family: "Open Sans", sans-serif;
+    margin: 0px;
+    border: 0px;
+    padding: 0px;
+    font-size: 0px;
+    text-align: center;
+    background-image: linear-gradient(#161617, #D59542);
+}
+
+#header{
+    width: 50%;
+    margin: auto;
+    color: white;
+    font-size: 36;
+    ;
 }
 
 svg{
-    background-color: beige;
+    background-color: #161617;
 }
 
-label{
-    color: white;
+.cycle-marker, .sub-cycle-marker{
+    stroke: #D59542;
 }
 
 .character-config{
@@ -15,19 +31,77 @@ label{
 }
 
 #offset{
-    height: 12.5px;
+    height: 37.5px;
+}
+
+#body{
+    color: #D59542;
+    font-size: 15px;
+    width: 900px;
+    min-width: 360px;
+    margin: auto;
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 10px;
+;}
+
+#timeline-container{
+    overflow-y: hidden;
+    overflow-x: auto;
 }
 
 .character-config > div{
-    vertical-align: top;
+    display: block;
+    width: 180px;
     height: 25px;
 }
 
 .character-config > div > *{
-    vertical-align: top;
-    display: inline-block;
+    float: left;
 }
 
-span{
-    display: inline-block;
+.border{
+    /*outline: 5px solid white;*/
+    border-radius: 10px;
+    background: #161617;
+    opacity: 0.9;
 }
+
+.flow {
+    font-size: 15px;
+    display: inline-block;
+    vertical-align: top;
+    color: white;
+    width: 450px;
+    height: 175px;
+    margin-top: 20px;
+}
+
+.left{
+    margin-right: 10px;
+}
+
+.right{
+    margin-left: 10px;
+}
+
+@media screen and (max-width: 900px) {
+    #body{
+        width: 95%;
+        margin: 0px 5px;
+    }
+
+    .flow {
+        width: 97%;
+    }
+
+    .left{
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+    
+    .right{
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+  }
