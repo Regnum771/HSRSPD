@@ -22,7 +22,7 @@ svg{
     background-color: #161617;
 }
 
-.cycle-marker, .sub-cycle-marker{
+.cycle-marker, .av-marker, .sub-cycle-marker{
     stroke: #D59542;
 }
 

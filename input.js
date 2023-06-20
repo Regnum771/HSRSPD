@@ -54,6 +54,22 @@ function draw_timeline_elements(){
     let cycle_marker = [0, 150, 250, 350, 450, 550, 650, 750]
     let sub_cycle_marker = [50, 100, 200, 300, 400, 500, 600, 700]
 
+    for(var i = 0; i < cycle_marker.length; i++){
+        svg.append("text")
+        .attr("class", "cycle-marker")
+        .attr("x", cycle_marker[i] + left_offset - 6.25)
+        .attr("y", top_offset/2)
+        .text(i);
+    }
+
+    for(var i = 0; i < cycle_marker.length; i++){
+        svg.append("text")
+        .attr("class", "cycle-marker")
+        .attr("x", cycle_marker[i] + left_offset - 6.25)
+        .attr("y", top_offset + line_height)
+        .text(cycle_marker[i]);
+    }
+
     svg.selectAll(".a")
         .data(cycle_marker)
         .join("g")
@@ -61,19 +77,11 @@ function draw_timeline_elements(){
 
     svg.selectAll(".a")
         .append("line")
-        .attr("class", "cycle-marker")
+        .attr("class", "av-marker")
         .attr("x1", d => d + left_offset)
         .attr("x2", d => d + left_offset)
         .attr("y1", top_offset)
         .attr("y2", line_height)
-        .attr("stroke", "black");
-
-    svg.selectAll(".a")
-        .append("text")
-        .attr("class", "cycle-marker")
-        .attr("x", d => d - 12.5 + left_offset)
-        .attr("y", line_height + top_offset)
-        .text(d => d)
         .attr("stroke", "black");
 
     svg.selectAll(".sub-cycle-marker")
@@ -139,14 +147,13 @@ function init_turn_indicator(){
         .attr("y1", 25)
         .attr("y2", line_height)
         .attr("stroke", d => colour[d.id]);
-
-    
+ 
     svg.selectAll(".indicator")  
         .append("rect")
             .attr("class", "bubble-tip")
             .attr("id", d=>"bubble-tip-"+ d.id + "-" + d.turn)
             .style("display", "none")
-            .attr("x", d => d.av + +25 + left_offset)
+            .attr("x", d => d.av + 25 + left_offset)
             .attr("y", d => (d.id + 0.5) * row_height + top_offset)
             .attr("fill",d => "white")
             .attr("fill-opacity", d=> 0.9)
@@ -156,7 +163,7 @@ function init_turn_indicator(){
     svg.selectAll(".indicator")  
         .append("text")
             .text(d => "av: " + d.av)
-            .attr("class", "bubble-tip")
+            .attr("class", "bubble-text")
             .attr("id", d=>"bubble-text-"+ d.id + "-" + d.turn)
             .style("font-family", "sans-serif")
             .style("display", "none")
@@ -237,11 +244,12 @@ function update_timeline(){
     svg.selectAll(".bubble-tip")
     .transition()
     .duration(200)
-    .attr("x", d=>d.av + 25 + left_offset);
+    .attr("x", d => d.av + 25 + left_offset);
 
-    svg.selectAll(".bubble-tip")
+    svg.selectAll(".bubble-text")
     .transition()
     .duration(200)
-    .text(d => "av: " + d.av);
+    .attr("x", d => d.av + 25 + left_offset)
+    .text(d => "av: " + parseInt(d.av));
 }
 
