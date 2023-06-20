@@ -30,14 +30,10 @@ svg{
     vertical-align: top;
 }
 
-#offset{
-    height: 37.5px;
-}
-
 #body{
     color: #D59542;
     font-size: 15px;
-    width: 900px;
+    width: 1000px;
     min-width: 360px;
     margin: auto;
     display: flex;
@@ -45,19 +41,23 @@ svg{
     padding: 10px;
 ;}
 
+#spd-label{
+    padding-left: 80px;
+}
+
 #timeline-container{
     overflow-y: hidden;
     overflow-x: auto;
 }
 
-.character-config > div{
+.full-height{
     display: block;
     width: 180px;
     height: 25px;
 }
 
-.character-config > div > *{
-    float: left;
+.half-height{
+    height: 12.5px;
 }
 
 .border{
@@ -72,7 +72,7 @@ svg{
     display: inline-block;
     vertical-align: top;
     color: white;
-    width: 450px;
+    width: 500px;
     height: 175px;
     margin-top: 20px;
 }

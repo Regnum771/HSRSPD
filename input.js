@@ -1,6 +1,6 @@
 var row_height = 25;
 var canvas_height = 175;
-var canvas_width = 700;
+var canvas_width = 800;
 var line_height = 150;
 var top_offset = 25;
 var left_offset = 25;
@@ -32,18 +32,22 @@ af.oninput = function(){
 character_spd = document.querySelectorAll('.spd')
 document.querySelectorAll('.spd').forEach((item, index) => {
     item.addEventListener('change', event => {
-        if(item.value > 90 & item.value < 200){
+        if(item.value >= 90 & item.value < 300){
+            character_data[index].spd = item.value;
+            update_timeline();
+        } else if (item.value < 90){
+            item.value = 90;
             character_data[index].spd = item.value;
             update_timeline();
         } else{
-            item.value = 90;
+            item.value = 299;
             character_data[index].spd = item.value;
             update_timeline();
         }
     })
 
     item.addEventListener('input', event => {
-        if(item.value > 90 & item.value < 200){
+        if(item.value > 90 & item.value < 300){
             character_data[index].spd = item.value;
             update_timeline();
         }
@@ -107,7 +111,7 @@ function init_timeline_data(cdata){
     var tldata = [];
     cdata.forEach((c) => {
         let tdata = []
-        for(var i = 0; i < 20; i++){
+        for(var i = 0; i < 30; i++){
             tdata.push({
                 "id":c.id,
                 "turn": i,
