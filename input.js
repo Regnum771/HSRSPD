@@ -122,69 +122,84 @@ function init_timeline_data(cdata){
 }
 
 function init_turn_indicator(){
-    svg.selectAll(".indicator")  
+    svg.selectAll(".turn-marker") 
     .data(data)
     .join("g")
     .selectAll("g")
     .data(function(d){
         return d;
-    })
-    .join("g")
-        .attr("class", "indicator")
-        .append("circle")
-        .join("circle")
-        .attr("class", "bubble")
-        .attr("cx", d => d.av + left_offset)
-        .attr("cy", d => row_height * (d.id + 1) + top_offset)
-        .attr("r", d => 10)
-        .attr("fill", d=> colour[d.id]);
-
-    svg.selectAll(".indicator")  
-        .append("line")
+    }).join("line")
         .attr("class", "turn-marker")
         .attr("x1", d => d.av + left_offset)
         .attr("x2", d => d.av + left_offset)
         .attr("y1", 25)
         .attr("y2", line_height)
         .attr("stroke", d => colour[d.id]);
- 
-    svg.selectAll(".indicator")  
-        .append("rect")
-            .attr("class", "bubble-tip")
-            .attr("id", d=>"bubble-tip-"+ d.id + "-" + d.turn)
-            .style("display", "none")
-            .attr("x", d => d.av + 25 + left_offset)
-            .attr("y", d => (d.id + 0.5) * row_height + top_offset)
-            .attr("fill",d => "white")
-            .attr("fill-opacity", d=> 0.9)
-            .attr("width", d=> 50)
-            .attr("height", d=> 25);
+
+    svg.selectAll(".turn-icon") 
+    .data(data)
+    .join("g")
+    .selectAll("g")
+    .data(function(d){
+        return d;
+    })
+    .join("circle")
+        .attr("class", "turn-icon")
+        .attr("cx", d => d.av + left_offset)
+        .attr("cy", d => row_height * (d.id + 1) + top_offset)
+        .attr("r", d => 10)
+        .attr("fill", d=> colour[d.id]);
+
+
+    svg.selectAll(".turn-display") 
+    .data(data)
+    .join("g")
+    .selectAll("g")
+    .data(function(d){
+        return d;
+    })
+    .join("rect")
+        .attr("class", "turn-display")
+        .attr("id", d=>"turn-display-"+ d.id + "-" + d.turn)
+        .style("display", "none")
+        .attr("x", d => d.av + 25 + left_offset)
+        .attr("y", d => (d.id + 0.5) * row_height + top_offset)
+        .attr("fill",d => "white")
+        .attr("fill-opacity", d=> 0.9)
+        .attr("width", d=> 50)
+        .attr("height", d=> 25);
     
-    svg.selectAll(".indicator")  
-        .append("text")
-            .text(d => "av: " + d.av)
-            .attr("class", "bubble-text")
-            .attr("id", d=>"bubble-text-"+ d.id + "-" + d.turn)
-            .style("font-family", "sans-serif")
-            .style("display", "none")
-            .style("font-size", 14)
-            .style("text-align", "left")
-            .attr("x", d => d.av + 25 + left_offset)
-            .attr("y", d => (d.id + 1) * row_height + top_offset)
-            .attr("stroke", d=> colour[d.id])
-            .attr("fill", d => "white");
+    svg.selectAll(".turn-av") 
+    .data(data)
+    .join("g")
+    .selectAll("g")
+    .data(function(d){
+        return d;
+    })
+    .join("text")
+        .text(d => "av: " + d.av)
+        .attr("class", "turn-av")
+        .attr("id", d=>"turn-av-"+ d.id + "-" + d.turn)
+        .style("font-family", "sans-serif")
+        .style("display", "none")
+        .style("font-size", 14)
+        .style("text-align", "left")
+        .attr("x", d => d.av + 25 + left_offset)
+        .attr("y", d => (d.id + 1) * row_height + top_offset)
+        .attr("stroke", d=> colour[d.id])
+        .attr("fill", d => "white");
     
-    svg.selectAll(".bubble")
+    svg.selectAll(".turn-icon")
         .on("mouseover", function(event, d){
-            d3.select("#bubble-tip-"+ d.id + "-" + d.turn)
+            d3.select("#turn-display-"+ d.id + "-" + d.turn)
             .style("display","block");
-            d3.select("#bubble-text-"+ d.id + "-" + d.turn)
+            d3.select("#turn-av-"+ d.id + "-" + d.turn)
             .style("display","block");
         })
         .on("mouseout", function(event, d){
-            d3.select("#bubble-tip-"+ d.id + "-" + d.turn)
+            d3.select("#turn-display-"+ d.id + "-" + d.turn)
             .style("display","none");
-            d3.select("#bubble-text-"+ d.id + "-" + d.turn)
+            d3.select("#turn-av-"+ d.id + "-" + d.turn)
             .style("display","none");
             })
         .on("click", function(event, d){
@@ -229,7 +244,7 @@ function update_timeline(){
     .attr("x1", d=>{return d.av + left_offset})
     .attr("x2", d=>{return d.av + left_offset});
 
-    svg.selectAll(".bubble")
+    svg.selectAll(".turn-icon")
     .transition()
     .duration(200)
     .attr("cx", d=>{return d.av + left_offset});
@@ -241,12 +256,12 @@ function update_timeline(){
         .attr("cx", selected.__data__.av + left_offset);
     }
 
-    svg.selectAll(".bubble-tip")
+    svg.selectAll(".turn-display")
     .transition()
     .duration(200)
     .attr("x", d => d.av + 25 + left_offset);
 
-    svg.selectAll(".bubble-text")
+    svg.selectAll(".turn-av")
     .transition()
     .duration(200)
     .attr("x", d => d.av + 25 + left_offset)
