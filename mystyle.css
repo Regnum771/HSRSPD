@@ -1,19 +1,19 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
 body{
+    color: #f8d2ad;
     font-family: "Open Sans", sans-serif;
     margin: 0px;
     border: 0px;
     padding: 0px;
     font-size: 0px;
     text-align: center;
-    background-image: linear-gradient(#161617, #D59542);
+    background-image: linear-gradient(#161617, #f8d2ad);
 }
 
 #header{
     width: 100%;
     margin: auto;
-    color: white;
     font-size: 36;
 }
 
@@ -21,7 +21,12 @@ svg{
     background-color: #161617;
 }
 
-.cycle-marker, .av-marker, .sub-cycle-marker{
+.cycle-marker{
+    stroke: #f8d2ad;
+    fill: #f8d2ad;
+}
+
+.av-marker, .sub-cycle-marker{
     stroke: #D59542;
 }
 
@@ -30,7 +35,6 @@ svg{
 }
 
 #body{
-    color: #D59542;
     font-size: 15px;
     width: 1000px;
     min-width: 360px;
@@ -71,7 +75,6 @@ svg{
     font-size: 15px;
     display: inline-block;
     vertical-align: top;
-    color: white;
     width: 500px;
     height: 175px;
     margin-top: 20px;
