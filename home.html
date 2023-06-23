@@ -7,30 +7,41 @@
 <body>
     <div id = "header">HSR SPD CALCULATOR</div>
     <div id = "body" class = "border">
-        <div class = "character-config">
-            <div class = "half-height"></div>
-            <div class = "full-height">
-                <label id = "spd-label">SPD</label>
-            </div>
-            <div class = "full-height">        
-                <label for="spd">Character 1</label>
-                <input type = "number" min = "90" max = "299" value = "100" class = "spd">
-            </div>
-            <div class = "full-height">        
-                <label for="spd">Character 2</label>
-                <input type = "number" min = "90" max = "299" value = "100" 
-                class = "spd">
-            </div>
-            <div class = "full-height">        
-                <label for="spd">Character 3</label>
-                <input type = "number" min = "90" max = "299" value = "100" 
-                class = "spd">
-            </div>
-            <div class = "full-height">        
-                <label for="spd">Character 4</label>
-                <input type = "number" min = "90" max = "299" value = "100" 
-                class = "spd">
-            </div> 
+        <div id = "character-config">
+            <table>
+                <tr>
+                    <th></th>
+                    <th>CYCLE: </th>
+                </tr>
+                <tr>
+                    <th>CHARACTER </th>
+                    <th>SPD</th>
+                </tr>
+                <tr>
+                    <th><label for="spd">CHARACTER1</label>
+                    </th>
+                    <th><input type = "number" min = "90" max = "299" value = "100" class = "spd"></th>
+                </tr>
+                <tr>
+                    <th><label for="spd">CHARACTER2</label>
+                    </th>
+                    <th><input type = "number" min = "90" max = "299" value = "100" class = "spd"></th>
+                </tr>
+                <tr>
+                    <th><label for="spd">CHARACTER3</label>
+                    </th>
+                    <th><input type = "number" min = "90" max = "299" value = "100" class = "spd"></th>
+                </tr>
+                <tr>
+                    <th><label for="spd">CHARACTER4</label>
+                    </th>
+                    <th><input type = "number" min = "90" max = "299" value = "100" class = "spd"></th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>AV:</th>
+                </tr>
+            </table>
         </div>
         <div id = "timeline-container">
             <svg id = "timeline"></svg>

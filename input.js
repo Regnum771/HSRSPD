@@ -62,7 +62,7 @@ function draw_timeline_elements(){
         svg.append("text")
         .attr("class", "cycle-marker")
         .attr("x", cycle_marker[i] + left_offset - 6.25)
-        .attr("y", top_offset/2)
+        .attr("y", 20)
         .text(i);
     }
 

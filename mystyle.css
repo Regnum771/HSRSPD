@@ -30,8 +30,30 @@ svg{
     stroke: #D59542;
 }
 
-.character-config{
+#character-config > table > tbody > tr{
+    outline: 0px;
+}
+
+#character-config > table > tbody > tr:first-child{
+    height: 25px;
     vertical-align: top;
+    text-align: right;
+}
+
+#character-config > table > tbody > tr:nth-child(-n+2){
+    height: 25px;
+    vertical-align: bottom;
+}
+
+#character-config > table > tbody > tr:nth-child(n+3){
+    height: 58px;
+    vertical-align: middle;
+}
+
+#character-config > table > tbody > tr:last-child{
+    height: 58px;
+    vertical-align: bottom;
+    text-align: right;
 }
 
 #body{
@@ -51,16 +73,6 @@ svg{
 #timeline-container{
     overflow-y: hidden;
     overflow-x: auto;
-}
-
-.full-height{
-    display: block;
-    width: 180px;
-    height: 25px;
-}
-
-.half-height{
-    height: 12.5px;
 }
 
 .border{
