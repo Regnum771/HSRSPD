@@ -1,7 +1,7 @@
-var row_height = 25;
-var canvas_height = 175;
-var canvas_width = 800;
-var line_height = 150;
+var row_spacing = 60;
+var icon_radius = 12.5;
+var canvas_height = 350;
+var canvas_width = 750;
 var top_offset = 25;
 var left_offset = 25;
 
@@ -70,7 +70,7 @@ function draw_timeline_elements(){
         svg.append("text")
         .attr("class", "cycle-marker")
         .attr("x", cycle_marker[i] + left_offset - 6.25)
-        .attr("y", top_offset + line_height)
+        .attr("y", canvas_height)
         .text(cycle_marker[i]);
     }
 
@@ -85,7 +85,7 @@ function draw_timeline_elements(){
         .attr("x1", d => d + left_offset)
         .attr("x2", d => d + left_offset)
         .attr("y1", top_offset)
-        .attr("y2", line_height)
+        .attr("y2", canvas_height - top_offset)
         .attr("stroke", "black");
 
     svg.selectAll(".sub-cycle-marker")
@@ -95,7 +95,7 @@ function draw_timeline_elements(){
         .attr("x1", d => d + left_offset)
         .attr("x2", d => d + left_offset)
         .attr("y1", top_offset)
-        .attr("y2", line_height)
+        .attr("y2", canvas_height - top_offset)
         .attr("stroke", "grey");
 }
 
@@ -136,8 +136,8 @@ function init_turn_indicator(){
         .attr("class", "turn-marker")
         .attr("x1", d => d.av + left_offset)
         .attr("x2", d => d.av + left_offset)
-        .attr("y1", 25)
-        .attr("y2", line_height)
+        .attr("y1", top_offset)
+        .attr("y2", canvas_height - top_offset)
         .attr("stroke", d => colour[d.id]);
 
     svg.selectAll(".turn-icon") 
@@ -150,8 +150,8 @@ function init_turn_indicator(){
     .join("circle")
         .attr("class", "turn-icon")
         .attr("cx", d => d.av + left_offset)
-        .attr("cy", d => row_height * (d.id + 1) + top_offset)
-        .attr("r", d => 10)
+        .attr("cy", d => row_spacing * (d.id + 1) + top_offset)
+        .attr("r", d => icon_radius)
         .attr("fill", d=> colour[d.id]);
 
 
@@ -166,12 +166,12 @@ function init_turn_indicator(){
         .attr("class", "turn-display")
         .attr("id", d=>"turn-display-"+ d.id + "-" + d.turn)
         .style("display", "none")
-        .attr("x", d => d.av + 25 + left_offset)
-        .attr("y", d => (d.id + 0.5) * row_height + top_offset)
+        .attr("x", d => d.av + icon_radius * 2 + left_offset)
+        .attr("y", d => (d.id + 1) * row_spacing - icon_radius + top_offset)
         .attr("fill",d => "white")
         .attr("fill-opacity", d=> 0.9)
-        .attr("width", d=> 50)
-        .attr("height", d=> 25);
+        .attr("width", d=> icon_radius * 6)
+        .attr("height", d=> icon_radius * 4);
     
     svg.selectAll(".turn-av") 
     .data(data)
@@ -184,12 +184,9 @@ function init_turn_indicator(){
         .text(d => "av: " + d.av)
         .attr("class", "turn-av")
         .attr("id", d=>"turn-av-"+ d.id + "-" + d.turn)
-        .style("font-family", "sans-serif")
         .style("display", "none")
-        .style("font-size", 14)
-        .style("text-align", "left")
-        .attr("x", d => d.av + 25 + left_offset)
-        .attr("y", d => (d.id + 1) * row_height + top_offset)
+        .attr("x", d => d.av + icon_radius * 2 + left_offset)
+        .attr("y", d => (d.id + 1) * row_spacing + top_offset)
         .attr("stroke", d=> colour[d.id])
         .attr("fill", d => "white");
     
@@ -209,7 +206,7 @@ function init_turn_indicator(){
         .on("click", function(event, d){
             d3.select(".highlight")
                 .attr("cx", d.av + left_offset)
-                .attr("cy", row_height * (d.id + 1) + top_offset)
+                .attr("cy", row_spacing * (d.id + 1) + top_offset)
                 .attr("display", "block");
             af.value = d.af;
             selected = this;
@@ -263,12 +260,12 @@ function update_timeline(){
     svg.selectAll(".turn-display")
     .transition()
     .duration(200)
-    .attr("x", d => d.av + 25 + left_offset);
+    .attr("x", d => d.av + icon_radius * 2 + left_offset);
 
     svg.selectAll(".turn-av")
     .transition()
     .duration(200)
-    .attr("x", d => d.av + 25 + left_offset)
+    .attr("x", d => d.av + icon_radius * 2 + left_offset)
     .text(d => "av: " + parseInt(d.av));
 }
 

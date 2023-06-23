@@ -36,9 +36,8 @@ svg{
 
 #body{
     font-size: 15px;
-    width: 1000px;
-    min-width: 360px;
-    margin: auto;
+    margin-left: 10%;
+    margin-right:10%;
     margin-top: 20px;
     display: flex;
     flex-wrap: nowrap;
@@ -91,6 +90,7 @@ svg{
 @media screen and (max-width: 1000px) {
     #body{
         width: 90%;
+        margin: auto;
     }
 
     .left{
