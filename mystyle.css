@@ -12,8 +12,10 @@ body{
 }
 
 #header{
-    width: 100%;
-    margin: auto;
+    margin-left: 10%;
+    margin-right:10%;
+    margin-top: 25px;
+    text-align: left;
     font-size: 36;
 }
 
@@ -60,7 +62,6 @@ svg{
     font-size: 15px;
     margin-left: 10%;
     margin-right:10%;
-    margin-top: 20px;
     display: flex;
     flex-wrap: nowrap;
     padding: 10px;
