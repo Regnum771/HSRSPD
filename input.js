@@ -55,8 +55,20 @@ document.querySelectorAll('.spd').forEach((item, index) => {
 })
 
 function draw_timeline_elements(){
-    let cycle_marker = [0, 150, 250, 350, 450, 550, 650, 750]
-    let sub_cycle_marker = [50, 100, 200, 300, 400, 500, 600, 700]
+    var sim_duration = 3;
+    canvas_width = sim_duration * 100 + 200;
+    svg.attr("width", canvas_width).attr("height", canvas_height);
+
+    let cycle_marker = [0, 150]
+    let sub_cycle_marker = [50, 100]
+
+    for(var i = 1; i <= sim_duration; i++){
+        cycle_marker.push(cycle_marker[i] + 100);
+    }
+
+    for(var i = 1; i <= sim_duration; i++){
+        sub_cycle_marker.push(sub_cycle_marker[i] + 100);
+    }
 
     for(var i = 0; i < cycle_marker.length; i++){
         svg.append("text")
