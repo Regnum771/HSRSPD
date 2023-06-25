@@ -153,7 +153,7 @@ function update_timeline_elements(){
 
     svg.select(".timeline-ticks")
     .selectAll(".tick")
-    .data(timeline_labels_x)
+    .data(timeline_ticks)
     .join(function(enter){
         enter.append("line")
         .attr("class", "tick")
