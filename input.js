@@ -1,10 +1,12 @@
 var row_spacing = 60;
 var icon_radius = 12.5;
 var canvas_height = 350;
-var canvas_width = 750;
 var top_offset = 25;
 var left_offset = 25;
-var scaling = 1.2;
+var scaling = 1.5;
+var sim_duration = 6;
+var canvas_width = 850;
+
 
 function init_timeline_data(cdata){};
 
@@ -29,6 +31,19 @@ af.oninput = function(){
     selected.__data__.af = af.value;
     update_timeline();
 }   
+
+var scaling_widget = document.getElementById("scaling-widget");
+scaling_widget.addEventListener('change', event =>{
+    scaling = parseFloat(scaling_widget.value);
+    update_timeline_elements();
+    update_timeline();
+})
+
+var sim_duration_widget = document.getElementById("sim-duration-widget");
+sim_duration_widget.addEventListener('change', event =>{
+    sim_duration = parseInt(sim_duration_widget.value);
+    update_timeline_elements();
+})
 
 character_spd = document.querySelectorAll('.spd')
 document.querySelectorAll('.spd').forEach((item, index) => {
@@ -56,64 +71,102 @@ document.querySelectorAll('.spd').forEach((item, index) => {
 })
 
 function draw_timeline_elements(){
-    var sim_duration = 7;
-    canvas_width = 7 * 120 + 100;
+    //Set scaling timeline canvas
+    canvas_width = left_offset + 100 * (sim_duration + 1.5) * scaling;
     svg.attr("width", canvas_width).attr("height", canvas_height);
 
-    let cycle_marker = [0]
-    let sub_cycle_marker = []
+    timeline_labels_x = calc_timeline_labels_x(sim_duration);
+    timeline_ticks = calc_timeline_ticks(sim_duration);
 
-    cycle_marker.push(150);
-    for(var i = 1; i <= sim_duration; i++){
-        cycle_marker.push(cycle_marker[i] + 100);
-    }
-
-    sub_cycle_marker.push(50)
-    sub_cycle_marker.push(100)
-
-    for(var i = 1; i <= sim_duration; i++){
-        sub_cycle_marker.push(sub_cycle_marker[i] + 100);
-    }
-
-    for(var i = 0; i < cycle_marker.length; i++){
-        svg.append("text")
-        .attr("class", "cycle-marker")
-        .attr("x", cycle_marker[i] * scaling + left_offset - 6.25)
+    //Add cycle labels to timeline
+    svg.append("g")
+    .attr("class", "timeline-labels")
+    .selectAll(".timeline-labels")
+    .data(timeline_labels_x)
+    .join(function(enter){
+        enter.append("text")
+        .attr("class", "cycle-label")
+        .attr("x", d => d * scaling + left_offset - 6.25)
         .attr("y", 20)
-        .text(i);
-    }
-
-    for(var i = 0; i < cycle_marker.length; i++){
-        svg.append("text")
-        .attr("class", "cycle-marker")
-        .attr("x", cycle_marker[i] * scaling + left_offset - 6.25)
+        .text(d => d);
+        
+        enter.append("text")
+        .attr("class", "cycle-av-label")
+        .attr("x", d => d * scaling + left_offset - 6.25)
         .attr("y", canvas_height)
-        .text(cycle_marker[i]);
-    }
+        .text(d => d);
+    });
+    
+    //Add ticks to timeline
+    svg.append("g")
+    .attr("class", "timeline-ticks")
+    .selectAll(".timeline-ticks")
+    .data(timeline_ticks)
+    .join((enter) =>{
+        let g = enter;
 
-    svg.selectAll(".a")
-        .data(cycle_marker)
-        .join("g")
-        .attr("class", "a");
-
-    svg.selectAll(".a")
-        .append("line")
-        .attr("class", "av-marker")
-        .attr("x1", d => d * scaling + left_offset)
-        .attr("x2", d => d * scaling+ left_offset)
-        .attr("y1", top_offset)
-        .attr("y2", canvas_height - top_offset)
-        .attr("stroke", "black");
-
-    svg.selectAll(".sub-cycle-marker")
-        .data(sub_cycle_marker)
-        .join("line")
-        .attr("class", "sub-cycle-marker")
+        g.append("line")
+        .attr("class", "tick")
         .attr("x1", d => d * scaling+ left_offset)
         .attr("x2", d => d * scaling+ left_offset)
         .attr("y1", top_offset)
         .attr("y2", canvas_height - top_offset)
-        .attr("stroke", "grey");
+    });   
+}
+
+function update_timeline_elements(){
+    canvas_width = left_offset + 100 * (sim_duration + 1.5) * scaling;
+    svg.attr("width", canvas_width).attr("height", canvas_height);
+
+    let timeline_ticks = calc_timeline_ticks(sim_duration);
+    let timeline_labels_x = calc_timeline_labels_x(sim_duration);
+
+    svg.select(".timeline-labels")
+    .selectAll(".cycle-label")
+    .data(timeline_labels_x)
+    .join(function(enter){
+        enter.append("text")
+        .attr("class", "cycle-label")
+        .attr("x", d => d * scaling + left_offset - 6.25)
+        .attr("y", 20)
+        .text(d => d);
+    });
+
+    svg.selectAll(".cycle-label")
+    .transition(150)
+    .attr("x", d => d * scaling + left_offset - 6.25);
+
+    svg.select(".timeline-labels")
+    .selectAll(".cycle-av-label")
+    .data(timeline_labels_x)
+    .join(function(enter){
+        enter.append("text")
+        .attr("class", "cycle-av-label")
+        .attr("x", d => d * scaling + left_offset - 6.25)
+        .attr("y", canvas_height)
+        .text(d => d);
+    });
+
+    svg.selectAll(".cycle-av-label")
+    .transition(150)
+    .attr("x", d => d * scaling + left_offset - 6.25);
+
+    svg.select(".timeline-ticks")
+    .selectAll(".tick")
+    .data(timeline_labels_x)
+    .join(function(enter){
+        enter.append("line")
+        .attr("class", "tick")
+        .attr("x1", d => d * scaling+ left_offset)
+        .attr("x2", d => d * scaling+ left_offset)
+        .attr("y1", top_offset)
+        .attr("y2", canvas_height - top_offset)
+    });
+
+    svg.selectAll(".tick")
+    .transition(150)
+    .attr("x1", d => d * scaling + left_offset)
+    .attr("x2", d => d * scaling + left_offset);
 }
 
 function init_character_data(cnum){
@@ -286,3 +339,18 @@ function update_timeline(){
     .text(d => "av: " + parseInt(d.av));
 }
 
+function calc_timeline_labels_x(duration){
+    let timeline_labels_x = [0, 150]
+    for(var i = 1; i <= duration; i++){
+        timeline_labels_x.push(timeline_labels_x[i] + 100);
+    }
+    return timeline_labels_x;
+}
+
+function calc_timeline_ticks(duration){
+    let timeline_ticks = [0, 50, 100, 150]
+    for(var i = 3; i <= duration * 2 + 2; i++){
+        timeline_ticks.push(timeline_ticks[i] + 50);
+    }
+    return timeline_ticks;
+}   

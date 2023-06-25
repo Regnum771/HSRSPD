@@ -23,12 +23,7 @@ svg{
     background-color: #161617;
 }
 
-.cycle-marker{
-    stroke: #f8d2ad;
-    fill: #f8d2ad;
-}
-
-.av-marker, .sub-cycle-marker{
+.timeline-labels, .timeline-ticks{
     stroke: #D59542;
 }
 
@@ -98,6 +93,11 @@ svg{
 
 .right{
     margin-left: 10px;
+}
+
+.test{
+    stroke: #D59542;
+
 }
 
 @media screen and (max-width: 1000px) {
