@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
 body{
+    position: relative;
     color: #f8d2ad;
     font-family: "Open Sans", sans-serif;
     margin: 0px;
@@ -27,30 +28,52 @@ svg{
     stroke: #D59542;
 }
 
-#character-config > table > tbody > tr{
-    outline: 0px;
+#character-config{
+    width: 220px;
+    position: relative;
+}
+
+#character-config > table{
+    position: absolute;
+    top: 12.5px;
+    border-collapse: collapse; 
+    width: 100%;
+}
+
+#character-config > table > tbody > tr:nth-child(n+1){
+    height: 58px;
+    vertical-align: top;
+    text-align: top;
 }
 
 #character-config > table > tbody > tr:first-child{
-    height: 25px;
-    vertical-align: top;
-    text-align: right;
-}
-
-#character-config > table > tbody > tr:nth-child(-n+2){
-    height: 25px;
+    border-bottom: 1px #D59542 solid;
     vertical-align: bottom;
 }
 
-#character-config > table > tbody > tr:nth-child(n+3){
-    height: 58px;
-    vertical-align: middle;
+#timeline-config{
+    margin-right: 0px;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
-#character-config > table > tbody > tr:last-child{
-    height: 58px;
-    vertical-align: bottom;
-    text-align: right;
+#timeline-config > div{
+    display: flex;
+    flex-direction: row;
+}
+
+#timeline-config > div > label{
+    flex: 1 0 0;
+    text-align: left;
+    width: 100px;
+}
+
+#timeline-config > div > input{
+    flex: 1 0 0;
+    text-align: left;
+    width: 100px;
 }
 
 #body{
@@ -59,6 +82,7 @@ svg{
     margin-right:10%;
     display: flex;
     flex-wrap: nowrap;
+    flex-direction: row;
     padding: 10px;
 ;}
 
@@ -67,8 +91,32 @@ svg{
 }
 
 #timeline-container{
+    position: relative;
     overflow-y: hidden;
     overflow-x: auto;
+    width: 1030px;
+    height: 400px;
+}
+
+/*width*/
+#timeline-container::-webkit-scrollbar {
+    width:2px;
+}
+  
+  /*track*/
+div::-webkit-scrollbar-track {
+    background:#161617;
+  }
+  
+  /*thumb*/
+div::-webkit-scrollbar-thumb {
+    background:#D59542;
+    border-radius: 10px;
+}
+
+#timeline-container > svg{
+    position: absolute;
+    left: 0px;
 }
 
 .border{
@@ -78,21 +126,22 @@ svg{
     opacity: 0.9;
 }
 
+#footer{
+    margin-left: 10%;
+    margin-right:10%;
+    display: flex;
+    flex-direction: row;
+    column-gap: 20px;
+
+}
+
 .flow {
     font-size: 15px;
     display: inline-block;
     vertical-align: top;
-    width: 500px;
     height: 175px;
     margin-top: 20px;
-}
-
-.left{
-    margin-right: 10px;
-}
-
-.right{
-    margin-left: 10px;
+    flex: 1 0 0;
 }
 
 .test{
@@ -104,6 +153,24 @@ svg{
     #body{
         width: 90%;
         margin: auto;
+        flex-wrap: wrap;
+    }
+
+    #character-config{
+        order: 1;
+    }
+
+    #timeline-config{
+        order: 2;
+    }
+
+    #timeline-container{
+        order: 3;
+        width: 100%;
+    }
+
+    #timeline-container > svg{
+        position: static;
     }
 
     .left{

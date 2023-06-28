@@ -1,29 +1,27 @@
 var row_spacing = 60;
 var icon_radius = 12.5;
-var canvas_height = 350;
 var top_offset = 25;
 var left_offset = 25;
 var scaling = 1.5;
 var sim_duration = 6;
+var canvas_height = 350;
 var canvas_width = 850;
 
-
-function init_timeline_data(cdata){};
+let colour = ["#6768e1", "#f26379", "#34ad83", "#c15fea"]
 
 let svg = d3.select("#timeline");
 svg.attr("width", canvas_width).attr("height", canvas_height);
 
-draw_timeline_elements();
-let colour = ["#6768e1", "#f26379", "#34ad83", "#c15fea"]
+init_timeline_elements();
 let character_data = init_character_data(4);
 console.log(character_data);
 let data = init_timeline_data(character_data);
 
-var af = document.getElementById("af-amount");
 var selected;
 
 init_turn_indicator();
 
+var af = document.getElementById("af-amount");
 af.oninput = function(){
     if(af.value >= 100){
         af.value = 99;
@@ -70,7 +68,7 @@ document.querySelectorAll('.spd').forEach((item, index) => {
     })
 })
 
-function draw_timeline_elements(){
+function init_timeline_elements(){
     //Set scaling timeline canvas
     canvas_width = left_offset + 100 * (sim_duration + 1.5) * scaling;
     svg.attr("width", canvas_width).attr("height", canvas_height);
@@ -100,7 +98,7 @@ function draw_timeline_elements(){
     //Add ticks to timeline
     svg.append("g")
     .attr("class", "timeline-ticks")
-    .selectAll(".timeline-ticks")
+    .selectAll(".tick")
     .data(timeline_ticks)
     .join((enter) =>{
         let g = enter;
@@ -112,61 +110,6 @@ function draw_timeline_elements(){
         .attr("y1", top_offset)
         .attr("y2", canvas_height - top_offset)
     });   
-}
-
-function update_timeline_elements(){
-    canvas_width = left_offset + 100 * (sim_duration + 1.5) * scaling;
-    svg.attr("width", canvas_width).attr("height", canvas_height);
-
-    let timeline_ticks = calc_timeline_ticks(sim_duration);
-    let timeline_labels_x = calc_timeline_labels_x(sim_duration);
-
-    svg.select(".timeline-labels")
-    .selectAll(".cycle-label")
-    .data(timeline_labels_x)
-    .join(function(enter){
-        enter.append("text")
-        .attr("class", "cycle-label")
-        .attr("x", d => d * scaling + left_offset - 6.25)
-        .attr("y", 20)
-        .text(d => d);
-    });
-
-    svg.selectAll(".cycle-label")
-    .transition(150)
-    .attr("x", d => d * scaling + left_offset - 6.25);
-
-    svg.select(".timeline-labels")
-    .selectAll(".cycle-av-label")
-    .data(timeline_labels_x)
-    .join(function(enter){
-        enter.append("text")
-        .attr("class", "cycle-av-label")
-        .attr("x", d => d * scaling + left_offset - 6.25)
-        .attr("y", canvas_height)
-        .text(d => d);
-    });
-
-    svg.selectAll(".cycle-av-label")
-    .transition(150)
-    .attr("x", d => d * scaling + left_offset - 6.25);
-
-    svg.select(".timeline-ticks")
-    .selectAll(".tick")
-    .data(timeline_ticks)
-    .join(function(enter){
-        enter.append("line")
-        .attr("class", "tick")
-        .attr("x1", d => d * scaling+ left_offset)
-        .attr("x2", d => d * scaling+ left_offset)
-        .attr("y1", top_offset)
-        .attr("y2", canvas_height - top_offset)
-    });
-
-    svg.selectAll(".tick")
-    .transition(150)
-    .attr("x1", d => d * scaling + left_offset)
-    .attr("x2", d => d * scaling + left_offset);
 }
 
 function init_character_data(cnum){
@@ -293,6 +236,33 @@ function init_turn_indicator(){
         .attr("display", "none");
 }
 
+function calc_timeline_labels_x(duration){
+    let timeline_labels_x = [0, 150]
+    for(var i = 1; i <= duration; i++){
+        timeline_labels_x.push(timeline_labels_x[i] + 100);
+    }
+    return timeline_labels_x;
+}
+
+function calc_timeline_ticks(duration){
+    let timeline_ticks = [0, 50, 100, 150]
+    for(var i = 3; i <= duration * 2 + 2; i++){
+        timeline_ticks.push(timeline_ticks[i] + 50);
+    }
+    return timeline_ticks;
+}   
+
+function update_timeline_elements(){
+    canvas_width = left_offset + 100 * (sim_duration + 1.5) * scaling;
+    svg.attr("width", canvas_width).attr("height", canvas_height);
+
+    let timeline_ticks = calc_timeline_ticks(sim_duration);
+    let timeline_labels_x = calc_timeline_labels_x(sim_duration);
+
+    update_timeline_labels(timeline_labels_x)
+    update_timeline_ticks(timeline_ticks)
+}
+ 
 function update_timeline(){
     for(var id = 0; id < data.length; id++){
         for(var turn = 0; turn < data[id].length; turn++){
@@ -339,18 +309,53 @@ function update_timeline(){
     .text(d => "av: " + parseInt(d.av));
 }
 
-function calc_timeline_labels_x(duration){
-    let timeline_labels_x = [0, 150]
-    for(var i = 1; i <= duration; i++){
-        timeline_labels_x.push(timeline_labels_x[i] + 100);
-    }
-    return timeline_labels_x;
+function update_timeline_labels(timeline_labels_x){
+    svg.select(".timeline-labels")
+    .selectAll(".cycle-label")
+    .data(timeline_labels_x)
+    .join(function(enter){
+        enter.append("text")
+        .attr("class", "cycle-label")
+        .attr("x", d => d * scaling + left_offset - 6.25)
+        .attr("y", 20)
+        .text(d => d);
+    });
+
+    svg.selectAll(".cycle-label")
+    .transition(150)
+    .attr("x", d => d * scaling + left_offset - 6.25);
+
+    svg.select(".timeline-labels")
+    .selectAll(".cycle-av-label")
+    .data(timeline_labels_x)
+    .join(function(enter){
+        enter.append("text")
+        .attr("class", "cycle-av-label")
+        .attr("x", d => d * scaling + left_offset - 6.25)
+        .attr("y", canvas_height)
+        .text(d => d);
+    });
+
+    svg.selectAll(".cycle-av-label")
+    .transition(150)
+    .attr("x", d => d * scaling + left_offset - 6.25);
 }
 
-function calc_timeline_ticks(duration){
-    let timeline_ticks = [0, 50, 100, 150]
-    for(var i = 3; i <= duration * 2 + 2; i++){
-        timeline_ticks.push(timeline_ticks[i] + 50);
-    }
-    return timeline_ticks;
-}   
+function update_timeline_ticks(timeline_ticks){
+    svg.select(".timeline-ticks")
+    .selectAll(".tick")
+    .data(timeline_ticks)
+    .join(function(enter){
+        enter.append("line")
+        .attr("class", "tick")
+        .attr("x1", d => d * scaling+ left_offset)
+        .attr("x2", d => d * scaling+ left_offset)
+        .attr("y1", top_offset)
+        .attr("y2", canvas_height - top_offset)
+    });
+
+    svg.selectAll(".tick")
+    .transition(150)
+    .attr("x1", d => d * scaling + left_offset)
+    .attr("x2", d => d * scaling + left_offset);
+}

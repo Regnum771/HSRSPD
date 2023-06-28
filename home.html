@@ -10,10 +10,6 @@
         <div id = "character-config">
             <table>
                 <tr>
-                    <th></th>
-                    <th>CYCLE: </th>
-                </tr>
-                <tr>
                     <th>CHARACTER </th>
                     <th>SPD</th>
                 </tr>
@@ -37,34 +33,24 @@
                     </th>
                     <th><input type = "number" min = "90" max = "299" value = "100" class = "spd"></th>
                 </tr>
-                <tr>
-                    <th></th>
-                    <th>AV:</th>
-                </tr>
             </table>
         </div>
         <div id = "timeline-container">
             <svg id = "timeline"></svg>
         </div>
-        <table>
-            <tr>
-                <th>
-                    Cycles
-                </th>
-                <th>
-                    <input type = "number" min = "6" max = "20" value = "6" id = "sim-duration-widget">
-                </th>
-            </tr>
-            <tr>
-                <th>
-                    Zoom
-                </th>
-                <th>
-                    <input type = "range" min = "1" max = "2" value = "1.0" step="0.01" id = "scaling-widget">
-                </th>
-            </tr>
-        </table>
+        <div id = "timeline-config">
+            <div>
+                <label>No. Cycles</label>
+                <input type = "number" min = "6" max = "20" value = "6" id = "sim-duration-widget">
+            </div>
+            <div>
+                <label for="spd">Zoom:</label>
+                <input type = "range" min = "1" max = "2" value = "1.0" step="0.01" id = "scaling-widget">
+            </div>
+            
+        </div>
     </div>
+    <div id ="footer">
         <div class = "flow border left" id = "turn-config">
             <p> Turn Configuration</p>
             <label for = "af-amount">Advanced Forward By:</label>
@@ -75,6 +61,7 @@
             <p>Programming: Regnum771</p>
             <p>Design: Aeo</p>
         </div>
+    </div>
 </body>
 
 <script type = "text/javascript" src ="input.js"></script>
