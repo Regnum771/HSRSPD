@@ -29,13 +29,12 @@ svg{
 }
 
 #character-config{
+    padding-left: 10px;
     width: 220px;
     position: relative;
 }
 
 #character-config > table{
-    position: absolute;
-    top: 12.5px;
     border-collapse: collapse; 
     width: 100%;
 }
@@ -83,8 +82,7 @@ svg{
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
-    padding: 10px;
-;}
+}
 
 #spd-label{
     padding-left: 80px;
@@ -106,17 +104,13 @@ svg{
   /*track*/
 div::-webkit-scrollbar-track {
     background:#161617;
+    border-radius: 10px;
   }
   
   /*thumb*/
 div::-webkit-scrollbar-thumb {
     background:#D59542;
     border-radius: 10px;
-}
-
-#timeline-container > svg{
-    position: absolute;
-    left: 0px;
 }
 
 .border{
@@ -132,7 +126,6 @@ div::-webkit-scrollbar-thumb {
     display: flex;
     flex-direction: row;
     column-gap: 20px;
-
 }
 
 .flow {
@@ -141,7 +134,8 @@ div::-webkit-scrollbar-thumb {
     vertical-align: top;
     height: 175px;
     margin-top: 20px;
-    flex: 1 0 0;
+    padding: 10px;
+    flex: 1 100%;
 }
 
 .test{
@@ -157,6 +151,7 @@ div::-webkit-scrollbar-thumb {
     }
 
     #character-config{
+        padding-left: 10px;
         order: 1;
     }
 
@@ -166,24 +161,20 @@ div::-webkit-scrollbar-thumb {
 
     #timeline-container{
         order: 3;
-        width: 100%;
+        width: 90%;
     }
 
     #timeline-container > svg{
         position: static;
     }
 
-    .left{
+    #footer{
+        width: 90%;
         margin: auto;
-    }
-    
-    .right{
-        margin: auto;
+        flex-wrap: wrap;
     }
 
     .flow {
-        padding: 10px;
-        margin-top: 20px;
-        width: 90%;
+        flex: 1 100%;
     }
-  }
+}

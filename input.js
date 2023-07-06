@@ -14,22 +14,36 @@ svg.attr("width", canvas_width).attr("height", canvas_height);
 
 init_timeline_elements();
 let character_data = init_character_data(4);
-console.log(character_data);
 let data = init_timeline_data(character_data);
-
+console.log(data[1]);
 var selected;
 
 init_turn_indicator();
 
-var af = document.getElementById("af-amount");
-af.oninput = function(){
-    if(af.value >= 100){
-        af.value = 99;
-    }
-    selected.__data__.af = af.value;
-    update_timeline();
-}   
+var table = document.getElementById("myTable");
 
+// Set AV Modifier Type
+av_modifiers_type = document.querySelectorAll('.av-modifier')
+av_modifiers_type.forEach((item, index) => {
+    item.addEventListener('input', event => {
+        selected.__data__.af[index].type = item.value;
+        update_timeline();
+    })
+})
+
+// AV Modifier
+av_modifiers = document.querySelectorAll('.modifier-value')
+av_modifiers.forEach((item, index) => {
+    item.addEventListener('input', event => {
+        if(item.value >= 100){
+            item.value = 99;
+        }
+        selected.__data__.af[index].value = item.value;
+        update_timeline();
+    })
+})
+
+// Zoom
 var scaling_widget = document.getElementById("scaling-widget");
 scaling_widget.addEventListener('change', event =>{
     scaling = parseFloat(scaling_widget.value);
@@ -125,11 +139,20 @@ function init_timeline_data(cdata){
     cdata.forEach((c) => {
         let tdata = []
         for(var i = 0; i < 30; i++){
+            af = []
+            for(var j = 0; j < 4; j++){
+                af.push({
+                    "type":"af-modifier",
+                    "value": 0,
+                    "target": c.id,
+                    "duration": 1
+                })
+            }
             tdata.push({
                 "id":c.id,
                 "turn": i,
                 "spd":c.spd,
-                "af":0,
+                "af":af,
                 "av": 10000/c.spd * (i + 1)
             })
         }
@@ -221,7 +244,12 @@ function init_turn_indicator(){
                 .attr("cx", d.av * scaling+ left_offset)
                 .attr("cy", row_spacing * (d.id + 1) + top_offset)
                 .attr("display", "block");
-            af.value = d.af;
+
+                for(var i = 0; i < 4; i++){
+                    av_modifiers[i].value = d.af[i].value;
+                    av_modifiers_type[i].value = d.af[i].type; 
+                    console.log(av_modifiers_type[i].value)
+                }
             selected = this;
         });
 
@@ -250,7 +278,7 @@ function calc_timeline_ticks(duration){
         timeline_ticks.push(timeline_ticks[i] + 50);
     }
     return timeline_ticks;
-}   
+}
 
 function update_timeline_elements(){
     canvas_width = left_offset + 100 * (sim_duration + 1.5) * scaling;
@@ -264,21 +292,38 @@ function update_timeline_elements(){
 }
  
 function update_timeline(){
+    // Aggregate AV modifers from timeline data
+    
+
+    // Apply AV modifiers to timeline data
     for(var id = 0; id < data.length; id++){
         for(var turn = 0; turn < data[id].length; turn++){
+            total_af_value = 0;
+
             data[id][turn].spd = character_data[id].spd;
+            old_spd_value = data[id][turn].spd
+            new_spd_value = data[id][turn].spd;
+
+            for(var mod = 0; mod < 4; mod++){
+                if(data[id][turn].af[mod].type == "af-modifier"){
+                    total_af_value += parseInt(data[id][turn].af[mod].value);
+                } else if(data[id][turn].af[mod].type == "spd-modifier"){
+                    new_spd_value += parseInt(data[id][turn].af[mod].value);
+                }
+            }
             if(turn == 0){
                 data[id][turn].av = 
-                10000/data[id][turn].spd * (1 - data[id][turn].af/100);
+                10000/new_spd_value * (1 - total_af_value/100);
             } else{
                 data[id][turn].av = 
                     data[id][turn - 1].av 
-                    + 10000/data[id][turn].spd
-                    * (1 - data[id][turn].af/100);
+                    + 10000/new_spd_value
+                    * (1 - total_af_value/100);
             }
         }
     } 
     
+    // Apply updated timeline data to UI
     svg.selectAll(".turn-marker")
     .transition()
     .duration(200)
