@@ -31,17 +31,32 @@ av_modifiers_type.forEach((item, index) => {
     })
 })
 
-// AV Modifier
+// AV Modifier Value
 av_modifiers = document.querySelectorAll('.modifier-value')
 av_modifiers.forEach((item, index) => {
     item.addEventListener('input', event => {
         if(item.value >= 100){
             item.value = 99;
         }
-        selected.__data__.af[index].value = item.value;
+        selected.__data__.af[index].value = parseInt(item.value);
         update_timeline();
     })
 })
+
+av_modifiers_target = document.querySelectorAll('.modifier-target')
+av_modifiers_target.forEach((item, index) => {
+    item.addEventListener('input', event => {
+        target = parseInt(item.value);
+        if(target != 99){
+            selected.__data__.af[index].target = [target];
+        }else{
+            selected.__data__.af[index].target = [0, 1, 2, 3];
+        }
+        console.log(selected.__data__.af[index].target)
+        update_timeline();
+    })
+})
+
 
 // Zoom
 var scaling_widget = document.getElementById("scaling-widget");
@@ -60,23 +75,17 @@ sim_duration_widget.addEventListener('change', event =>{
 character_spd = document.querySelectorAll('.spd')
 document.querySelectorAll('.spd').forEach((item, index) => {
     item.addEventListener('change', event => {
-        if(item.value >= 90 & item.value < 300){
-            character_data[index].spd = item.value;
+        value = parseInt(item.value)
+        if(value >= 90 & value < 300){
+            character_data[index].spd = value;
             update_timeline();
-        } else if (item.value < 90){
+        } else if (value < 90){
             item.value = 90;
-            character_data[index].spd = item.value;
+            character_data[index].spd = value;
             update_timeline();
         } else{
             item.value = 299;
-            character_data[index].spd = item.value;
-            update_timeline();
-        }
-    })
-
-    item.addEventListener('input', event => {
-        if(item.value > 90 & item.value < 300){
-            character_data[index].spd = item.value;
+            character_data[index].spd = value;
             update_timeline();
         }
     })
@@ -248,7 +257,7 @@ function init_turn_indicator(){
                 for(var i = 0; i < 4; i++){
                     av_modifiers[i].value = d.af[i].value;
                     av_modifiers_type[i].value = d.af[i].type; 
-                    console.log(av_modifiers_type[i].value)
+                    console.log(av_modifiers_type[i].value);
                 }
             selected = this;
         });
@@ -292,8 +301,22 @@ function update_timeline_elements(){
 }
  
 function update_timeline(){
-    // Aggregate AV modifers from timeline data
-    
+    // Identify Target
+    /*
+    target = null;
+
+    for(var id = 0; id < selected.__data__.af[id].target.length; id++){
+        target_id = selected.__data__.af[id].target[id];
+        for(var turn = 0; turn < data[target_id].length; turn++){
+            if(data[target_id][turn].av > selected.__data__.av){
+                target = data[target_id][turn];
+                break;
+            }
+        }
+    }
+
+    console.log(target);
+    */
 
     // Apply AV modifiers to timeline data
     for(var id = 0; id < data.length; id++){
@@ -301,8 +324,8 @@ function update_timeline(){
             total_af_value = 0;
 
             data[id][turn].spd = character_data[id].spd;
-            old_spd_value = data[id][turn].spd
-            new_spd_value = data[id][turn].spd;
+            old_spd_value = character_data[id].spd;
+            new_spd_value = character_data[id].spd;
 
             for(var mod = 0; mod < 4; mod++){
                 if(data[id][turn].af[mod].type == "af-modifier"){
@@ -319,6 +342,9 @@ function update_timeline(){
                     data[id][turn - 1].av 
                     + 10000/new_spd_value
                     * (1 - total_af_value/100);
+            }
+            if(new_spd_value < 100){
+                console.log("SHIT");
             }
         }
     } 
@@ -352,6 +378,8 @@ function update_timeline(){
     .duration(200)
     .attr("x", d => d.av * scaling + icon_radius * 2 + left_offset)
     .text(d => "av: " + parseInt(d.av));
+
+    console.log(selected.__data__)
 }
 
 function update_timeline_labels(timeline_labels_x){
