@@ -35,10 +35,14 @@ av_modifiers_type.forEach((item, index) => {
 av_modifiers = document.querySelectorAll('.modifier-value')
 av_modifiers.forEach((item, index) => {
     item.addEventListener('input', event => {
-        if(item.value >= 100){
-            item.value = 99;
+        if(parseFloat(item.value)){
+            if(item.value >= 100){
+                item.value = 99;
+            }
+            selected.__data__.af[index].value = parseFloat(item.value);
+        } else{
+            selected.__data__.af[index].value = 0;
         }
-        selected.__data__.af[index].value = parseInt(item.value);
         update_timeline();
     })
 })
@@ -304,6 +308,7 @@ function update_timeline(){
     // Identify Target
     /*
     target = null;
+    
 
     for(var id = 0; id < selected.__data__.af[id].target.length; id++){
         target_id = selected.__data__.af[id].target[id];
@@ -329,9 +334,9 @@ function update_timeline(){
 
             for(var mod = 0; mod < 4; mod++){
                 if(data[id][turn].af[mod].type == "af-modifier"){
-                    total_af_value += parseInt(data[id][turn].af[mod].value);
+                    total_af_value += parseFloat(data[id][turn].af[mod].value);
                 } else if(data[id][turn].af[mod].type == "spd-modifier"){
-                    new_spd_value += parseInt(data[id][turn].af[mod].value);
+                    new_spd_value += parseFloat(data[id][turn].af[mod].value);
                 }
             }
             if(turn == 0){
@@ -342,9 +347,6 @@ function update_timeline(){
                     data[id][turn - 1].av 
                     + 10000/new_spd_value
                     * (1 - total_af_value/100);
-            }
-            if(new_spd_value < 100){
-                console.log("SHIT");
             }
         }
     } 
